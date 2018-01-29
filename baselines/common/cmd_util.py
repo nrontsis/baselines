@@ -3,6 +3,7 @@ Helpers for scripts like run_atari.py.
 """
 
 import os
+import roboschool
 import gym
 from baselines import logger
 from baselines.bench import Monitor
@@ -32,7 +33,10 @@ def make_mujoco_env(env_id, seed):
     """
     set_global_seeds(seed)
     env = gym.make(env_id)
-    env = Monitor(env, logger.get_dir())
+    env = gym.wrappers.Monitor(
+            env, logger.get_dir(),
+            force=True, video_callable=lambda episode_id: False
+            )
     env.seed(seed)
     return env
 

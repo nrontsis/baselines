@@ -61,4 +61,9 @@ def mujoco_arg_parser():
     parser.add_argument('--env', help='environment ID', type=str, default="Reacher-v1")
     parser.add_argument('--seed', help='RNG seed', type=int, default=0)
     parser.add_argument('--num-timesteps', type=int, default=int(1e6))
+    parser.add_argument('--batch-size', type=int, default=int(64))
+    parser.add_argument('--clip-param', type=float, default=0.2)
+    parser.add_argument('--stepsize', type=float, default=3e-4)
+    parser.add_argument('--gamma', type=float, default=0.99)
+    parser.add_argument('--lambda', type=float, default=0.95)
     return parser

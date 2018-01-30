@@ -5,7 +5,7 @@ from baselines.common import tf_util as U
 from baselines import logger
 import numpy as np
 
-def train(env_id, num_timesteps, seed, save='tmp.txt',
+def train(env_id, num_timesteps, seed, save,
           clip_param, optim_stepsize, optim_batchsize, gamma, lam):
     from baselines.ppo1 import mlp_policy, pposgd_simple
     U.make_session(num_cpu=1).__enter__()
@@ -22,15 +22,15 @@ def train(env_id, num_timesteps, seed, save='tmp.txt',
             gamma=gamma, lam=lam, schedule='linear',
         )
     env.close()
-    np.savetxt(save, np.array([final_score]))
+    np.savetxt(save, np.array([ret]))
 
 def main():
     args = mujoco_arg_parser().parse_args()
     logger.configure()
     train(args.env, num_timesteps=args.num_timesteps, seed=args.seed,
-          clip_param=args.clip_param, optim_stepsize=args.optim_stepsize,
-          optim_batchsize=args.optim_batchsize, gamma=args.gamma,
-          lam=args.lam
+          clip_param=args.clip_param, optim_stepsize=args.stepsize,
+          optim_batchsize=args.batch_size, gamma=args.gamma,
+          lam=args.lam, save=args.save
     )
 
 if __name__ == '__main__':

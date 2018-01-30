@@ -69,5 +69,6 @@ def mujoco_arg_parser():
     parser.add_argument('--clip-param', type=float, default=0.2)
     parser.add_argument('--stepsize', type=float, default=3e-4)
     parser.add_argument('--gamma', type=float, default=0.99)
-    parser.add_argument('--lambda', type=float, default=0.95)
+    parser.add_argument('--lam', type=float, default=0.95)
+    parser.add_argument('--save', type=str, default='tmp.txt')
     return parser

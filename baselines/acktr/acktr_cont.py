@@ -65,6 +65,7 @@ def learn(env, policy, vf, gamma, lam, timesteps_per_batch, num_timesteps,
     do_update = U.function(inputs, update_op)
     U.initialize()
 
+    eprewards = []
     # start queue runners
     enqueue_threads = []
     coord = tf.train.Coordinator()
@@ -129,6 +130,8 @@ def learn(env, policy, vf, gamma, lam, timesteps_per_batch, num_timesteps,
         else:
             logger.log("kl just right!")
 
+        eprewards.append(np.mean([path["reward"].sum() for path in paths]))
+
         logger.record_tabular("EpRewMean", np.mean([path["reward"].sum() for path in paths]))
         logger.record_tabular("EpRewSEM", np.std([path["reward"].sum()/np.sqrt(len(paths)) for path in paths]))
         logger.record_tabular("EpLenMean", np.mean([pathlength(path) for path in paths]))
@@ -140,3 +143,5 @@ def learn(env, policy, vf, gamma, lam, timesteps_per_batch, num_timesteps,
 
     coord.request_stop()
     coord.join(enqueue_threads)
+
+    return np.mean(eprewards)

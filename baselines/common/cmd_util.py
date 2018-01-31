@@ -70,5 +70,6 @@ def mujoco_arg_parser():
     parser.add_argument('--stepsize', type=float, default=3e-4)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--lam', type=float, default=0.95)
+    parser.add_argument('--desired_kl', type=float, default=0.002)
     parser.add_argument('--save', type=str, default='tmp.txt')
     return parser

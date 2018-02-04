@@ -4,7 +4,7 @@ from baselines import logger
 import baselines.common as common
 from baselines.common import tf_util as U
 from baselines.acktr import kfac
-from baselines.common.filters import ZFilter
+from baselines.acktr.filters import ZFilter
 
 def pathlength(path):
     return path["reward"].shape[0]# Loss function that we'll differentiate to get the policy gradient
@@ -78,7 +78,7 @@ def learn(env, policy, vf, gamma, lam, timesteps_per_batch, num_timesteps,
     while True:
         if timesteps_so_far > num_timesteps:
             break
-        logger.log("********** Iteration %i ************"%i)
+        # logger.log("********** Iteration %i ************"%i)
 
         # Collect paths until we have enough timesteps
         timesteps_this_batch = 0
@@ -122,23 +122,24 @@ def learn(env, policy, vf, gamma, lam, timesteps_per_batch, num_timesteps,
         # Adjust stepsize
         kl = policy.compute_kl(ob_no, oldac_dist)
         if kl > desired_kl * 2:
-            logger.log("kl too high")
+            # logger.log("kl too high")
             tf.assign(stepsize, tf.maximum(min_stepsize, stepsize / 1.5)).eval()
         elif kl < desired_kl / 2:
-            logger.log("kl too low")
+            # logger.log("kl too low")
             tf.assign(stepsize, tf.minimum(max_stepsize, stepsize * 1.5)).eval()
         else:
-            logger.log("kl just right!")
+            # logger.log("kl just right!")
+            pass
 
         eprewards.append(np.mean([path["reward"].sum() for path in paths]))
 
-        logger.record_tabular("EpRewMean", np.mean([path["reward"].sum() for path in paths]))
-        logger.record_tabular("EpRewSEM", np.std([path["reward"].sum()/np.sqrt(len(paths)) for path in paths]))
-        logger.record_tabular("EpLenMean", np.mean([pathlength(path) for path in paths]))
-        logger.record_tabular("KL", kl)
+        # logger.record_tabular("EpRewMean", np.mean([path["reward"].sum() for path in paths]))
+        # logger.record_tabular("EpRewSEM", np.std([path["reward"].sum()/np.sqrt(len(paths)) for path in paths]))
+        # logger.record_tabular("EpLenMean", np.mean([pathlength(path) for path in paths]))
+        # logger.record_tabular("KL", kl)
         if callback:
             callback()
-        logger.dump_tabular()
+        # logger.dump_tabular()
         i += 1
 
     coord.request_stop()
